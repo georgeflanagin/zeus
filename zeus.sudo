@@ -1,0 +1,50 @@
+# Define command aliases
+Cmnd_Alias SYS_LOGS = /usr/bin/journalctl, /bin/cat /var/log/*
+Cmnd_Alias SYS_MONITOR = /usr/bin/top, /usr/bin/htop, /bin/df, /usr/bin/du, /usr/bin/ps
+Cmnd_Alias SYS_BACKUP = /bin/tar, /usr/bin/rsync
+Cmnd_Alias SYS_MAINT = /sbin/fsck, /bin/mount, /bin/umount, /bin/systemctl restart [allowed services], /usr/sbin/service [allowed services]
+Cmnd_Alias SYS_ACCOUNT = /usr/bin/sa, /usr/sbin/accton, /usr/bin/last
+Cmnd_Alias SYS_CRON = /usr/bin/crontab -l, /usr/bin/crontab -e
+Cmnd_Alias SYS_PRINT = /usr/bin/lpstat, /usr/bin/lprm
+
+# User privilege specification
+%sys ALL=(ALL) NOPASSWD: SYS_LOGS, SYS_MONITOR, SYS_BACKUP, SYS_MAINT, SYS_ACCOUNT, SYS_CRON, SYS_PRINT
+
+# Deny specific commands explicitly
+Defaults!/usr/sbin/useradd, !/usr/sbin/userdel, !/usr/sbin/usermod, !/usr/bin/passwd !/usr/sbin/iptables, !/usr/sbin/firewalld, !/usr/sbin/setenforce, !/usr/bin/apt, !/usr/bin/yum, !/usr/bin/dnf, !/usr/sbin/ifconfig, !/usr/sbin/route, !/sbin/modprobe, !/sbin/insmod, !/sbin/rmmod
+
+# Network-related commands
+Cmnd_Alias NETWORK_CMDS = /sbin/ifconfig, /usr/sbin/ip, /usr/bin/nmcli, /usr/sbin/route
+
+# User management commands
+Cmnd_Alias USER_CMDS = /usr/sbin/useradd, /usr/sbin/userdel, /usr/sbin/usermod, /usr/bin/passwd
+
+# Filesystem management commands
+Cmnd_Alias FILESYSTEM_CMDS = /bin/mount, /bin/umount, /sbin/fsck, /bin/chown, /bin/chmod
+
+# Service management commands
+Cmnd_Alias SERVICE_CMDS = /bin/systemctl restart [specific services], /usr/sbin/service [specific services]
+
+# System monitoring commands
+Cmnd_Alias MONITOR_CMDS = /usr/bin/top, /usr/bin/htop, /usr/bin/ps, /usr/bin/df, /usr/bin/du
+
+# Backup commands
+Cmnd_Alias BACKUP_CMDS = /bin/tar, /usr/bin/rsync
+
+# Log access commands
+Cmnd_Alias LOG_CMDS = /usr/bin/journalctl, /bin/cat /var/log/*
+
+# Create a user group for system maintenance
+%sys ALL=(ALL) NOPASSWD: MONITOR_CMDS, LOG_CMDS, BACKUP_CMDS, FILESYSTEM_CMDS, SERVICE_CMDS
+
+# Create a group for network operators
+%netops ALL=(ALL) NOPASSWD: NETWORK_CMDS, MONITOR_CMDS
+
+# Define a group with full administrative privileges (excluding sensitive tasks)
+%fulladmin ALL=(ALL) NOPASSWD: ALL, !USER_CMDS
+
+# Assign roles to individual users or user groups
+alice ALL=(ALL) NOPASSWD: MONITOR_CMDS, LOG_CMDS   # Alice has limited maintenance permissions
+bob ALL=(ALL) NOPASSWD: SERVICE_CMDS, NETWORK_CMDS # Bob has permission to manage services and networks
+%devops ALL=(ALL) NOPASSWD: MONITOR_CMDS, BACKUP_CMDS, SERVICE_CMDS # DevOps team has broader access
+
