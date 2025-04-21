@@ -35,7 +35,7 @@ excessive detail, this is how the script works:
   members of trustee.
 - Changes the ownership of `/home/zeus` to `root:trustee` with access `0750`, allowing trustees (of which zeus is one) to read
   but not write within the directory, except for `/home/zeus/tmp`.
-- Creates `/usr/local/libexec/zeus_wrapper_common.sh` which is a file that checks
+- Creates `/usr/local/libexec/zeus_wrapper_common.sh` a file that checks
   each command executed for safety. 
 
 A couple of things to keep in mind. 
@@ -52,6 +52,8 @@ The scripts do not take any options; you just need to run them.  If you
 want to make changes to their operation, go ahead. For example, if you
 do not want to use the name `zeus` for the user, you can change the
 value of the `$ZEUS_USER` variable in the scripts.  ## remove-zeus
+
+## remove-zeus
 
 This script was developed primarily to test the creation of the zeus
 user. That is to say, it took a while to get everything to work. It
