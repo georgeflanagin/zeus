@@ -12,31 +12,32 @@ they are privileged, are done to keep the computer up-and-running.
 ## create-zeus
 
 The script creates a sub-root user named `zeus`. Without going into too
-excessive detail, this is how the script works:
+excessive detail, these are the tasks done by the script:
 
-- Create two groups, `zeus` and `trustee`.
-- Creates a local user named `zeus` who belongs to both of the above groups.
-- Creates the directory `/etc/zeus` to contain the configuration file[s].
-- Creates the directory `/var/lib/zeus` to contain zeus's commands.
-- Creates a file named `/var/log/zeus-login.log` to record logins to zeus.
-- Sets access to `zeus-login.log` to `0620` with the ownership of `root:trustee`. This allows
+1. Create two groups, `zeus` and `trustee`.
+1. Creates a local user named `zeus` who belongs to both of the above groups.
+1. Creates the directory `/etc/zeus` to contain the configuration file[s].
+1. Creates the directory `/var/lib/zeus` to contain zeus's commands.
+1. Creates a file named `/var/log/zeus-login.log` to record logins to zeus.
+1. Sets access to `zeus-login.log` to `0620` with the ownership of `root:trustee`. This allows
   members of trustee to write to it, but not read or alter it. Additionally, the
   write access is set to append-only (using `chattr`).
-- Creates `/etc/sudoers.d/trustee` that allows members of trustee to issue
+1. Creates `/etc/sudoers.d/trustee` that allows members of trustee to issue
   exactly one command, `sudo su - zeus`, allowing them to become zeus.
-- Creates `/etc/sudoers.d/zeus` that enumerates the commands allowed for zeus.
-- Creates `/etc/zeus/allowed-commands` that contains the commands zeus is allowed to use.
-- Creates `/var/lib/zeus/allowed-commands.md5` that contains the hash of the allowed commands.
-- Installs a cron job that runs `/usr/local/sbin/generate-zeus-sudoers.sh` checks every
+1. Creates `/etc/sudoers.d/zeus` that enumerates the commands allowed for zeus.
+1. Creates `/etc/zeus/allowed-commands` that contains the commands zeus is allowed to use.
+1. Creates `/var/lib/zeus/allowed-commands.md5` that contains the hash of the allowed commands.
+1. Installs a cron job that runs `/usr/local/sbin/generate-zeus-sudoers.sh` checks every
   five minutes for changes to the list of commands for zeus. If the list has changed, the
   `sudoers.d` file is refreshed.
-- Adds a line to `/etc/fstab` that mounts a `tmpfs` filesystem on `/home/zeus/tmp`. As written, this
+1. Adds a line to `/etc/fstab` that mounts a `tmpfs` filesystem on `/home/zeus/tmp`. As written, this
   file system is only 128MB (you can change it), the purpose being to allow write access to a secure space for the
   members of trustee.
-- Changes the ownership of `/home/zeus` to `root:trustee` with access `0750`, allowing trustees (of which zeus is one) to read
+1. Changes the ownership of `/home/zeus` to `root:trustee` with access `0750`, allowing trustees (of which zeus is one) to read
   but not write within the directory, except for `/home/zeus/tmp`.
-- Creates `/usr/local/libexec/zeus_wrapper_common.sh` a file that checks
+1. Creates `/usr/local/libexec/zeus_wrapper_common.sh` a file that checks
   each command executed for safety. 
+1. Creates `/home/zeus/.bashrc` to be sure `/usr/local/sbin` is first in the `$PATH` for `zeus`.
 
 A couple of things to keep in mind. 
 

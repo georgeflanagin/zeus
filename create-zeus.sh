@@ -46,6 +46,11 @@ chown root:trustee /var/log/zeus-login.log
 chmod 0620 /var/log/zeus-login.log
 chattr +a /var/log/zeus-login.log
 
+# Set zeus's .bashrc so that /usr/local/sbin is first.
+cat <<EOF >/home/zeus/.bashrc
+export PATH=/usr/local/sbin:\$PATH
+EOF
+
 # Create a starter allowed-commands file if missing
 if [[ ! -f "$ALLOWED_CMDS_FILE" ]]; then
     cat <<EOF > "$ALLOWED_CMDS_FILE"
