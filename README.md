@@ -25,7 +25,7 @@ excessive detail, these are the tasks done by the script:
 1. Creates `/etc/sudoers.d/trustee` that allows members of trustee to issue
   exactly one command, `sudo su - zeus`, allowing them to become zeus.
 1. Creates `/etc/sudoers.d/zeus` that enumerates the commands allowed for zeus.
-1. Creates `/etc/zeus/allowed-commands` that contains the commands zeus is allowed to use.
+1. Creates `/etc/zeus/allowed-commands` that lists in plain text the commands zeus is allowed to use.
 1. Creates `/var/lib/zeus/allowed-commands.md5` that contains the hash of the allowed commands.
 1. Installs a cron job that runs `/usr/local/sbin/generate-zeus-sudoers.sh` checks every
   five minutes for changes to the list of commands for zeus. If the list has changed, the
