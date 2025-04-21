@@ -75,3 +75,5 @@ You can use this command to create a few commonly used commands for zeus.
 
 # Using the scripts
 
+It is not quite as simple as `./wrapcmd.sh command` and you are done, unless
+you want to allow any variation of `command`. 

@@ -62,5 +62,8 @@ crontab -l 2>/dev/null | grep -v "$CRON_SCRIPT" | crontab - || true
 chattr -a "$LOGFILE"
 rm -f "$LOGFILE"
 
+# 11. Remove tmp file system.
+sed -i '/zeus/d' /etc/fstab
+
 echo "Zeus has been removed. The workstation may now ascend... to general use."
 

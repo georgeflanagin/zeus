@@ -3,6 +3,11 @@
 
 set -euo pipefail
 
+if ! id $(whoami) ; then
+    echo 'This command must be run as root.'
+    exit
+fi
+
 echo "Bootstrapping Zeus privilege structure..."
 
 # Constants
@@ -137,12 +142,13 @@ chmod 700 /home/zeus/tmp
 
 # Mount it
 echo "Mounting /home/zeus/tmp..."
-mount /home/zeus/tmp
+mount /home/zeus/tmp > /dev/null 2>&1
+systemctl daemon-reload
 
 # Verify
 echo
 echo "Mounted filesystem:"
-mount | grep '/home/zeus/tmp' || echo " Mount failed!"
+mount | grep -q '/home/zeus/tmp' || echo " Mount failed!"
 
 echo "Disk usage:"
 df -h /home/zeus/tmp
@@ -156,17 +162,17 @@ cat <<EOF >$LIBEXEC_COMMON
 LOGFILE="/var/log/zeus-wrapper.log"
 
 # Default blocklist (can be overridden)
-BLOCKED_PATTERNS=("${BLOCKED_PATTERNS[@]:-wheel --remove-home --force}")
+BLOCKED_PATTERNS=("\${BLOCKED_PATTERNS[@]:-wheel --remove-home --force}")
 
 log() {
-    echo "$(date '+%F %T') | $(whoami) ran: $CMDNAME $*" >> "$LOGFILE"
+    echo "\$(date '+%F %T') | \$(whoami) ran: \$1 \$*" >> "\$LOGFILE"
 }
 
 fail_if_blocked() {
-    for pattern in "${BLOCKED_PATTERNS[@]}"; do
-        if printf '%q ' "$@" | grep -q -w "$pattern"; then
-            echo "Error: Forbidden option or target: '$pattern'" >&2
-            log "[BLOCKED] $*"
+    for pattern in "\${BLOCKED_PATTERNS[@]}"; do
+        if printf '%q ' "\$@" | grep -q -w "\$pattern"; then
+            echo "Error: Forbidden option or target: '\$pattern'" >&2
+            log "[BLOCKED] \$*"
             exit 1
         fi
     done
