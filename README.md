@@ -13,12 +13,14 @@ this is what the scripts do:
 
 - Create two groups, `zeus` and `trustee`.
 - Creates a local user named `zeus` who belongs to both of the above groups.
-- Creates the directory /etc/zeus to contain the configuration file[s].
-- Creates the directory /var/lib/zeus to contain zeus's commands.
-- Creates a file named /var/log/zeus-login.log to record logins to zeus.
-- Sets access to zeus-login.log to 0620 with the ownership of root:trustee. This allows
+- Creates the directory `/etc/zeus` to contain the configuration file[s].
+- Creates the directory `/var/lib/zeus` to contain zeus's commands.
+- Creates a file named `/var/log/zeus-login.log` to record logins to zeus.
+- Sets access to `zeus-login.log` to `0620` with the ownership of `root:trustee`. This allows
   members of trustee to write to it, but not read or alter it. Additionally, the
-  write access is set to append-only (using chattr).
+  write access is set to append-only (using `chattr`).
+- Creates a file in `/etc/sudoers.d` that allows members of trustee to issue
+  exactly one command, `sudo su - zeus`, allowing them to become zeus.
 
 # About the scripts
 The scripts do not take any options; you just need to run them.
