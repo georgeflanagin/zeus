@@ -26,6 +26,8 @@ getent group "$TRUSTEE_GROUP" >/dev/null || groupadd "$TRUSTEE_GROUP"
 # Create zeus user if missing
 if ! id "$ZEUS_USER" &>/dev/null; then
     useradd -m -s /bin/bash -g "$ZEUS_GROUP" -g "$TRUSTEE_GROUP" "$ZEUS_USER"
+    chown root:trustee /home/zeus
+    chmod 0640 /home/zeus
     echo "Created user '$ZEUS_USER'"
 fi
 
