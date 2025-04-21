@@ -8,8 +8,9 @@ Linux has no built-in sub-root user, as did many flavors of UNIX. The tasks are 
 called *operator tasks*, meaning that they are commonly executed commands, that although they
 are privileged, are done to keep the computer up-and-running.
 
-These scripts create a sub-root user named `zeus`. Without going into too much detail,
-this is what the scripts do:
+# create-zeus
+The script creates a sub-root user named `zeus`. Without going into too excessive detail,
+this is how the script works:
 
 - Create two groups, `zeus` and `trustee`.
 - Creates a local user named `zeus` who belongs to both of the above groups.
@@ -21,6 +22,17 @@ this is what the scripts do:
   write access is set to append-only (using `chattr`).
 - Creates a file in `/etc/sudoers.d` that allows members of trustee to issue
   exactly one command, `sudo su - zeus`, allowing them to become zeus.
+- Creates `/etc/zeus/allowed-commands` that contains the commands zeus is allowed to use.
+- Creates `/var/lib/zeus/allowed-commands.md5` that contains the hash of the allowed commands.
+- Installs a cron job that runs `/usr/local/sbin/generate-zeus-sudoers.sh` checks every
+  five minutes for changes to the list of commands for zeus. If the list has changed, the
+  `sudoers.d` file is refreshed.
+- Adds a line to `/etc/fstab` that mounts a `tmpfs` filesystem on `/home/zeus/tmp`. As written, this
+  file system is only 128MB (you can change it), the purpose being to allow write access to a secure space for the
+  members of trustee.
+- Changes the ownership of `/home/zeus` to `root:trustee` with access `0750`, allowing trustees (of which zeus is one) to read
+  but not write within the directory, except for `/home/zeus/tmp`.
+  
 
 # About the scripts
 The scripts do not take any options; you just need to run them.
