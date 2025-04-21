@@ -8,7 +8,7 @@ Linux has no built-in sub-root user, as did many flavors of UNIX. The tasks are 
 called *operator tasks*, meaning that they are commonly executed commands, that although they
 are privileged, are done to keep the computer up-and-running.
 
-# create-zeus
+## create-zeus
 The script creates a sub-root user named `zeus`. Without going into too excessive detail,
 this is how the script works:
 
@@ -42,6 +42,12 @@ the user will need to logout/login for Linux to notice.
 On the other hand, changes to the sudoers files are instantaneously reflected in the running
 system. If you grant `zeus` a new command, `zeus` can execute it immediately.
 
+## remove-zeus
+
+This script was developed primarily to test the creation of the zeus user. That is
+to say, it took a while to get everything to work. It removes everything about zeus
+from the system, which is also convenient if you decide to abandon delegation of commands
+to the zeus user and adopt some other method.
 
 # About the scripts
 The scripts do not take any options; you just need to run them.
