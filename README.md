@@ -74,7 +74,19 @@ the underlying, unwrapped command.
 
 You can use this command to create a few commonly used commands for zeus.
 
-# Using the scripts
+# Using the Zeus system
+
+## Adding trustees
+
+Identify users who will be allowed to be Zeus. The only required action is 
+
+```bash
+usermod -aG trustee ae9qg
+```
+
+As mentioned above, the user must logout/login for the change to be realized.
+
+## Adding commands to Zeus.
 
 It is not quite as simple as `./wrapcmd.sh command` and you are done, unless
 you want to allow any variation of `command`. 
