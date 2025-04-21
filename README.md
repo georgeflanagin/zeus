@@ -52,7 +52,7 @@ reflected in the running system. If you grant `zeus` a new command,
 The scripts do not take any options; you just need to run them.  If you
 want to make changes to their operation, go ahead. For example, if you
 do not want to use the name `zeus` for the user, you can change the
-value of the `$ZEUS_USER` variable in the scripts.  ## remove-zeus
+value of the `$ZEUS_USER` variable in the scripts.  
 
 ## remove-zeus
 
