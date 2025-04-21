@@ -32,7 +32,16 @@ this is how the script works:
   members of trustee.
 - Changes the ownership of `/home/zeus` to `root:trustee` with access `0750`, allowing trustees (of which zeus is one) to read
   but not write within the directory, except for `/home/zeus/tmp`.
-  
+
+A couple of things to keep in mind. 
+
+Membership in groups is session dependent. Linux looks at
+your group affiliations when you login, and never looks again. So, if you add a user to `trustee`,
+the user will need to logout/login for Linux to notice.
+
+On the other hand, changes to the sudoers files are instantaneously reflected in the running
+system. If you grant `zeus` a new command, `zeus` can execute it immediately.
+
 
 # About the scripts
 The scripts do not take any options; you just need to run them.
