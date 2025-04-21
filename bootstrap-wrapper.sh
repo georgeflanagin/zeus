@@ -5,7 +5,7 @@ set -euo pipefail
 
 LIBEXEC_COMMON="/usr/local/libexec/zeus_wrapper_common.sh"
 WRAPPER_DIR="/usr/local/sbin"
-ZEUS_GROUP="zeusgrp"
+ZEUS_GROUP="zeus"
 
 # List of commands to wrap as they are generally written.
 COMMAND_LIST=(
@@ -32,6 +32,11 @@ for cmd in "${COMMAND_LIST[@]}"; do
 
     echo "Installing wrapper for $cmd"
 
+###
+# Note that this part of the script dumps out the 
+# new wrapper. It is not running /bin/bash again
+# within the script.
+###
     cat <<EOF > "$WRAPPER_PATH"
 #!/bin/bash
 CMDNAME=\$(basename "\$0")
@@ -47,6 +52,9 @@ log "\$@"
 exec sudo "\$REALCMD" "\$@"
 EOF
 
+###
+# Now finish the setup of the file we just created.
+###
     chmod 750 "$WRAPPER_PATH"
     chown root:$ZEUS_GROUP "$WRAPPER_PATH"
 done
