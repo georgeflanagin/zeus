@@ -101,14 +101,14 @@ cat, `/usr/bin/cat`.
 
 The `wrapcmd.sh` script will create a wrapper for the `sudo` command, and place
 it in `/usr/local/sbin`. For Zeus, this directory is searched first. Let's take a
-quick look at what is in the wrapper, in this case for our friend `cat`, and
+quick look at what is in the wrapper, in this case `usermod`, and
 go through it line-by-line. 
 
 
 ```
  1	#!/bin/bash
  2	CMDNAME=$(basename "$0")
- 3	REALCMD="/usr/sbin/cat"
+ 3	REALCMD="/usr/sbin/usermod"
  4	
  5	# Optional: define command-specific block patterns here
  6	BLOCKED_PATTERNS=('wheel')
@@ -120,4 +120,21 @@ go through it line-by-line.
 12	exec "$REALCMD" "$@"
 ```
 
-Line 2 
+Line 2 separates "parts" of the command's name. For example, the file being
+executed is `/usr/local/sbin/usermod`, so we extract the `usermod` from it.
+
+Line 3 identifies the underlying executable. You should always check the 
+correctness of this line because there are some programs that violate
+the Linux file hierarchy standard. 
+
+Line 6 enumerates the forbidden terms. In this example, `wheel` (the group
+which is often allowed unlimited `sudo`, is off limits. You would not often
+want to give away the right to `usermod -aG wheel ae9qg`.
+
+Line 8 imports the `log` and `fail_if_blocked` shell functions that will 
+abort the command if the "rules" are violated. These are checked on lines
+10 and 11. 
+
+Line 12 does the work.
+ 
+
