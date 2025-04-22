@@ -105,19 +105,19 @@ quick look at what is in the wrapper, in this case for our friend `cat`, and
 go through it line-by-line. 
 
 
-`
-     1	#!/bin/bash
-     2	CMDNAME=$(basename "$0")
-     3	REALCMD="/usr/sbin/cat"
-     4	
-     5	# Optional: define command-specific block patterns here
-     6	BLOCKED_PATTERNS=('wheel')
-     7	
-     8	source "/usr/local/libexec/zeus_wrapper_common.sh"
-     9	
-    10	fail_if_blocked "$@"
-    11	log "$@"
-    12	exec "$REALCMD" "$@"
-`
+```
+ 1	#!/bin/bash
+ 2	CMDNAME=$(basename "$0")
+ 3	REALCMD="/usr/sbin/cat"
+ 4	
+ 5	# Optional: define command-specific block patterns here
+ 6	BLOCKED_PATTERNS=('wheel')
+ 7	
+ 8	source "/usr/local/libexec/zeus_wrapper_common.sh"
+ 9	
+10	fail_if_blocked "$@"
+11	log "$@"
+12	exec "$REALCMD" "$@"
+```
 
 Line 2 
