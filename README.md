@@ -80,13 +80,44 @@ You can use this command to create a few commonly used commands for zeus.
 
 Identify users who will be allowed to be Zeus. The only required action is 
 
-```bash
-usermod -aG trustee ae9qg
-```
+`usermod -aG trustee ae9qg`
 
 As mentioned above, the user must logout/login for the change to be realized.
 
 ## Adding commands to Zeus.
 
 It is not quite as simple as `./wrapcmd.sh command` and you are done, unless
-you want to allow any variation of `command`. 
+you want to allow any variation of `command`. In fact, if you want to allow all
+variations of a command via `sudo`, it is quite a bit more direct to just add 
+a line to the `sudoers` file that allows it, for example, `shutdown`: 
+
+`zeus ALL=(ALL) NOPASSWD: /usr/sbin/shutdown`
+
+Do note that it is important to specifically identify the command in this way.
+For example, suppose you wanted Zeus to be able to read (see the contents of) 
+any file. It is tempting to allow `sudo cat`, but there are problems with this
+method, namely that there is no guarantee that `cat` resolves to the "real" 
+cat, `/usr/bin/cat`. 
+
+The `wrapcmd.sh` script will create a wrapper for the `sudo` command, and place
+it in `/usr/local/sbin`. For Zeus, this directory is searched first. Let's take a
+quick look at what is in the wrapper, in this case for our friend `cat`, and
+go through it line-by-line. 
+
+
+`
+     1	#!/bin/bash
+     2	CMDNAME=$(basename "$0")
+     3	REALCMD="/usr/sbin/cat"
+     4	
+     5	# Optional: define command-specific block patterns here
+     6	BLOCKED_PATTERNS=('wheel')
+     7	
+     8	source "/usr/local/libexec/zeus_wrapper_common.sh"
+     9	
+    10	fail_if_blocked "$@"
+    11	log "$@"
+    12	exec "$REALCMD" "$@"
+`
+
+Line 2 
