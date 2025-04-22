@@ -99,6 +99,8 @@ any file. It is tempting to allow `sudo cat`, but there are problems with this
 method, namely that there is no guarantee that `cat` resolves to the "real" 
 cat, `/usr/bin/cat`. 
 
+### How wrapcmd works
+
 The `wrapcmd.sh` script will create a wrapper for the `sudo` command, and place
 it in `/usr/local/sbin`. For Zeus, this directory is searched first. Let's take a
 quick look at what is in the wrapper, in this case `usermod`, and
@@ -136,5 +138,32 @@ abort the command if the "rules" are violated. These are checked on lines
 10 and 11. 
 
 Line 12 does the work.
+
+### Editing the wrapped command.
+
+The key edit is of the `BLOCKED_PATTERNS` shell variable, which is written
+as an array. The pattern matching is simple comparison rather than regular
+expression grammar. Note how the `fail_if_blocked` function works:
+
+```
+fail_if_blocked() 
+{
+    for pattern in "${BLOCKED_PATTERNS[@]}"; do
+        if printf '%q ' "$@" | grep -q -w "$pattern"; then
+            echo "Error: Forbidden option or target: '$pattern'" >&2
+            log "[BLOCKED] $*"
+            exit 1
+        fi
+    done
+}
+``` 
+
+Essentially, we are grepping the entire command for each of the forbidden 
+patterns. This approach is not very sophisticated, but errors are more likely
+to occur on the side forbidding something that is OK than allowing something
+that could create a serious problem. As a somewhat humorour example, suppose 
+there is a user named "Billy Heel," whose username is "wheel" because his 
+real name is "William Heel." I'm sure you see the problem: `usermod -aG localusers wheel`
+will fail the test.
  
 
