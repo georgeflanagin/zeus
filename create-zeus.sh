@@ -30,8 +30,9 @@ getent group "$TRUSTEE_GROUP" >/dev/null || groupadd "$TRUSTEE_GROUP"
 
 # Create zeus user if missing
 if ! id "$ZEUS_USER" &>/dev/null; then
-    useradd -m -s /bin/bash -g "$ZEUS_GROUP" -g "$TRUSTEE_GROUP" "$ZEUS_USER"
+    useradd -m -s /bin/bash -g "$ZEUS_GROUP" "$ZEUS_USER"
     chown root:trustee /home/zeus
+    usermod -aG "$TRUSTEE_GROUP" "$ZEUS_USER"
     chmod 0750 /home/zeus
     echo "Created user '$ZEUS_USER'"
 fi
@@ -45,6 +46,11 @@ touch /var/log/zeus-login.log
 chown root:trustee /var/log/zeus-login.log
 chmod 0620 /var/log/zeus-login.log
 chattr +a /var/log/zeus-login.log
+
+touch /var/log/zeus-wrapper.log
+chown root:trustee /var/log/zeus-wrapper.log
+chmod 0620 /var/log/zeus-wrapper.log
+chattr +a /var/loog/zeus-wrapper.log
 
 # Set zeus's .bashrc so that /usr/local/sbin is first.
 cat <<EOF >/home/zeus/.bashrc
