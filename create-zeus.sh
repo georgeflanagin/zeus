@@ -50,7 +50,7 @@ chattr +a /var/log/zeus-login.log
 touch /var/log/zeus-wrapper.log
 chown root:trustee /var/log/zeus-wrapper.log
 chmod 0620 /var/log/zeus-wrapper.log
-chattr +a /var/loog/zeus-wrapper.log
+chattr +a /var/log/zeus-wrapper.log
 
 # Set zeus's .bashrc so that /usr/local/sbin is first.
 cat <<EOF >/home/zeus/.bashrc
