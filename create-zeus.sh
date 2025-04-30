@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-if ! id $(whoami) ; then
+if ! id -u $(whoami) ; then
     echo 'This command must be run as root.'
     exit
 fi
